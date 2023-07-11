@@ -6,7 +6,7 @@ if __name__ == '__main__':
     N = int(data)
 
     if N < 2:
-      print([1, 1][N])
+      print(1)
       continue
 
     memo = [0] * (N + 1)
