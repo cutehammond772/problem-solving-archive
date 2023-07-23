@@ -29,6 +29,7 @@ if __name__ == '__main__':
 
       break
 
+    # 동일한 키의 연속성 판단
     if stack and L[x] == stack[-1][0]:
       stack.append((L[x], stack[-1][1] + 1))
     else:
@@ -39,4 +40,5 @@ if __name__ == '__main__':
 
     result += max(0, stack[-1][1])
 
+  # (N - 1)은 인접한 두 키의 쌍을 나타냄
   print(result + (N - 1))
