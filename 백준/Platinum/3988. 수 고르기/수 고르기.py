@@ -16,10 +16,11 @@ if __name__ == '__main__':
 
   # 슬라이딩 윈도우
   for offset in range(K + 1):
-    # 범위에 해당되지 않는 원소 제거
+    # 범위에 해당되지 않는 원소를 제거한다.
     if queue and queue[0] <= offset:
       queue.popleft()
 
+    # 최솟값을 구성하는 (두) 원소를 모두 저장하는 것이 아니라, 최솟값의 대표가 되는 원소만 저장한다.
     for x in range(idx, offset + (N - K)):
       while queue and (V[x] - V[x - 1]) <= (V[queue[-1]] - V[queue[-1] - 1]):
         queue.pop()
