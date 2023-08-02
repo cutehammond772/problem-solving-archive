@@ -1,43 +1,27 @@
-import sys, math
+import sys
+from collections import deque
 input = lambda: sys.stdin.readline().rstrip()
 
-def make(tree, A, node, left, right):
-  if left == right:
-    tree[node] = A[left]
-    return
-
-  mid = (left + right) // 2
-  make(tree, A, node * 2, left, mid)
-  make(tree, A, node * 2 + 1, mid + 1, right)
-
-  tree[node] = max(tree[node * 2], tree[node * 2 + 1])
-
-def init(N, A):
-  tree = [0] * (2 ** (math.ceil(math.log2(N)) + 1))
-  make(tree, A, 1, 0, N - 1)
-
-  return tree
-
-def query(tree, x, y, node, left, right):
-  if x <= left and right <= y:
-    return tree[node]
-
-  if y < left or right < x:
-    return 0
-
-  mid = (left + right) // 2
-
-  return max(
-    query(tree, x, y, node * 2, left, mid),
-    query(tree, x, y, node * 2 + 1, mid + 1, right)
-  )
-
+# Decreasing Monotone Queue
 def solve(N, M, A):
   result = []
-  tree = init(N, A)
 
-  for x in range(M - 1, N - (M - 1)):
-    result.append(query(tree, x - (M - 1), x + (M - 1), 1, 0, N - 1))
+  L = 2 * M - 1
+  queue = deque([])
+
+  idx = 0
+  for offset in range(N - L + 1):
+    if queue and queue[0] < offset:
+      queue.popleft()
+
+    while idx < offset + L:
+      while queue and A[queue[-1]] <= A[idx]:
+        queue.pop()
+
+      queue.append(idx)
+      idx += 1
+
+    result.append(A[queue[0]])
 
   return result
 
