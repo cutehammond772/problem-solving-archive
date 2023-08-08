@@ -2,10 +2,9 @@
 #define FAST_IO ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr)
 
 using namespace std;
-using ll = long long;
 
 struct RangeSegmentTree {
-    ll arr[500000], tree[2000000], lazy[2000000];
+    int arr[500000], tree[2000000], lazy[2000000];
 
     void propagate(int node, int left, int right) {
         if (!lazy[node]) return;
@@ -20,7 +19,7 @@ struct RangeSegmentTree {
         lazy[node] = 0;
     }
 
-    void update(int x, int y, ll k, int node, int left, int right) {
+    void update(int x, int y, int k, int node, int left, int right) {
         propagate(node, left, right);
 
         if (right < x || y < left)
@@ -44,7 +43,7 @@ struct RangeSegmentTree {
         tree[node] = tree[node * 2] + tree[node * 2 + 1];
     }
 
-    ll query(int x, int node, int left, int right) {
+    int query(int x, int node, int left, int right) {
         propagate(node, left, right);
 
         if (!(left <= x && x <= right))
@@ -110,7 +109,7 @@ int main() {
 
         if (c == 'u') {
             cin >> a;
-            
+
             // 트리의 구간은 DFS 순서를 기준으로 한다는 점에 유의한다.
             cout << range.query(tour.under[a - 1].first, 1, 0, N - 1) << "\n";
         }
