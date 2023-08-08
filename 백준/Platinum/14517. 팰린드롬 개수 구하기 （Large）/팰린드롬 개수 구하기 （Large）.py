@@ -3,19 +3,17 @@ input = lambda: sys.stdin.readline().rstrip()
 MOD = 10007
 
 if __name__ == '__main__':
-  S = input()
-  L = len(S)
+  L = len(S := input())
 
-  # 인덱스 i부터 존재하는 팰린드롬 개수
+  # 인덱스 x부터 존재하는 팰린드롬 개수
   memo = [0] * L
 
   for x in range(L):
-    accu = 1
-    memo[x] += accu
+    memo[x] += (accu := 1)
 
     for y in range(x - 1, -1, -1):
       if S[x] == S[y]:
-        accu = (memo[y + 1] + 1) % MOD
+        accu = memo[y + 1] + 1
 
       memo[y] = (memo[y] + accu) % MOD
 
