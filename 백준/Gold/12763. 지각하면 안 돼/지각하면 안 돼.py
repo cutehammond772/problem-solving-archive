@@ -2,7 +2,7 @@ import sys
 input = lambda: sys.stdin.readline().rstrip()
 INF = 2 ** 63 - 1
 
-def solve(N, T, M ,adj):
+def solve(N, T, M, adj):
 	result = INF
 	visited = set()
 
