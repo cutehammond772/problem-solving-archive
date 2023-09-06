@@ -1,45 +1,46 @@
-from queue import Queue
 import sys
-input = lambda: sys.stdin.readline().strip()
+from collections import deque
+input = lambda: sys.stdin.readline().rstrip()
 
-# 특정 지점으로부터의 최대값
-def solve(tree, x):
-  max_val, max_idx = -1, -1
-  
-  visited = set()
-  que = Queue()
-  que.put((x, 0))
-  
-  while not que.empty():
-    curr, cost = que.get()
-    visited.add(curr)
+def furthest_node(N, V, adj):
+	visited = [False] * (V + 1)
+	queue = deque([(N, 0)])
 
-    if len(tree[curr]) == 1 and curr != x:
-      if max_val < cost:
-        max_val, max_idx = cost, curr
-        continue
-        
-    for next in tree[curr]:
-      if next in visited:
-        continue
-      
-      que.put((next, cost + tree[curr][next]))
-      
-  return max_val, max_idx
-  
-# 입력
-if __name__ == '__main__':
-  N = int(input())
-  tree = [{} for _ in range(N)]
-  
-  for x in range(N):
-    lst = list(map(int, input().split()))
-    start_node = lst[0] - 1
-    
-    for idx in range(1, len(lst) - 1, 2):
-      next_node, dist = lst[idx] - 1, lst[idx + 1]
-      tree[start_node][next_node] = dist
-      
-  _, first_idx = solve(tree, 0)
-  result_val, _ = solve(tree, first_idx)
-  print(result_val)
+	result, dist = N, 0
+	visited[N] = True
+
+	while queue:
+		node, accu = queue.popleft()
+
+		for next, cost in adj[node]:
+			if visited[next]:
+				continue
+
+			visited[next] = True
+			queue.append((next, accu + cost))
+
+			if dist < accu + cost:
+				dist = accu + cost
+				result = next
+
+	return result, dist
+
+def solve(V, adj):
+	leaf, _ = furthest_node(1, V, adj)
+	_, result = furthest_node(leaf, V, adj)
+
+	return result
+
+if __name__ == "__main__":
+	V = int(input())
+	adj = [set() for _ in range(V + 1)]
+
+	for _ in range(V):
+		P, *Y = map(int, input().split())
+
+		for x in range(0, len(Y) - 1, 2):
+			Q, cost = Y[x], Y[x + 1]
+			adj[P].add((Q, cost))
+			adj[Q].add((P, cost))
+
+	print(solve(V, adj))
