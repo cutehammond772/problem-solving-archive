@@ -15,8 +15,8 @@ def solve(N, X):
 
 	for i in range(1, N + 1):
 		for x in range(1, X[i] + 1):
-			memo[i][x] = max(1, accu[i - 1][x])
-			accu[i][x] = memo[i][x] + accu[i][x - 1]
+			memo[i][x] = max(1, accu[i - 1][x] % MOD)
+			accu[i][x] = (memo[i][x] + accu[i][x - 1]) % MOD
 
 		# 각 수의 최대가 중간에 갭이 생길 때를 대비하여,
 		# 이를 마지막 경우의 수로 채운다.
