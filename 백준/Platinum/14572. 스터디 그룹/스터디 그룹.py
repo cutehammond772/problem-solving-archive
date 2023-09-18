@@ -2,7 +2,7 @@ import sys
 input = lambda: sys.stdin.readline().rstrip()
 
 def solve(N, K, D, students, algorithms):
-	# (실력) 오름차순으로 정렬한다.
+	# 특정 실력차 구간을 유지하기 위해 실력 오름차순으로 정렬한다.
 	students.sort()
 	x = 0
 
@@ -10,7 +10,10 @@ def solve(N, K, D, students, algorithms):
 	check = [0] * (K + 1)
 	algo_count, stud_count, result = 0, 0, 0
 
-	# 모든 학생들이 알아야 효율성이 줄어든다. 즉 학생을 최대한 많이 잡는 것이 이득이다.
+	# (1) 모든 학생들이 알아야 효율성이 줄어든다. 즉 학생을 최대한 많이 잡는 것이 이득이다.
+	# (2) 효율성에 대해 별도로 따질 필요가 없는 이유는,
+	# 특정 알고리즘에 대해 모든 학생들이 알고 있는 경우 누구를 배제시킨다 해도
+	# 나머지 학생들 또한 모두 알고 있기 때문이다. (이득 X)
 	for y in range(N):
 		dx, ix = students[x]
 		dy, iy = students[y]
