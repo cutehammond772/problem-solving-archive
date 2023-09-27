@@ -1,70 +1,60 @@
 import sys
 input = lambda: sys.stdin.readline().rstrip()
 
-def check(matrix, T):
-	# [승점, 골득실, 다득점, 상대 전적]
-	P = [[0, 0, 0, 4 - i] for i in range(4)]
+INF = 10 ** 12 + 1
+POINT, GOAL_DIFF, GOALS = 0, 1, 2
 
-	for a in range(4 - 1):
-		for b in range(a + 1, 4):
-			if matrix[a][b] == -1:
-				unknown = (a, b)
-				continue
+def solve(T, K, board, unknown):
+	def check():
+		totals = [[0] * 3 + [4 - i] for i in range(4)]
 
-			if matrix[b][a] == -1:
-				unknown = (b, a)
-				continue
+		for x in range(3):
+			for y in range(x + 1, 4):
+				score_xy, score_yx = board[x][y], board[y][x]
 
-			cmp = matrix[a][b] - matrix[b][a]
+				if score_xy > score_yx:
+					totals[x][POINT] += 3
+				elif score_yx > score_xy:
+					totals[y][POINT] += 3
+				else:
+					totals[x][POINT] += 1
+					totals[y][POINT] += 1
 
-			if cmp > 0:
-				P[a][0] += 3
-				P[a][1] += cmp
-				P[a][2] += matrix[a][b]
+				totals[x][GOAL_DIFF] += score_xy - score_yx
+				totals[y][GOAL_DIFF] += score_yx - score_xy
 
-				P[b][1] += -cmp
-				P[b][2] += matrix[b][a]
-			elif cmp < 0:
-				P[b][0] += 3
-				P[b][1] += -cmp
-				P[b][2] += matrix[b][a]
+				totals[x][GOALS] += score_xy
+				totals[y][GOALS] += score_yx
 
-				P[a][1] += cmp
-				P[a][2] += matrix[a][b]
-			else:
-				P[a][0] += 1
-				P[a][2] += matrix[a][b]
+		totals.sort(reverse=True)
 
-				P[b][0] += 1
-				P[b][2] += matrix[b][a]
+		for rank in range(4):
+			if totals[rank][3] == 4 - T:
+				return rank < 2
 
-	P.sort()
+		return False
 
-	for x in range(4):
-		if 4 - P[x][3] == T:
-			return x > 1
-
-def solve(T, K, matrix, unknown):
-	P, Q = 0, K
+	result = INF
+	low, high = 0, K
 	a, b = unknown
-	result = 10 ** 12 + 1
 
-	while P <= Q:
-		mid = (P + Q) // 2
-		matrix[a][b] = mid
+	while low <= high:
+		mid = (low + high) // 2
+		board[a][b] = mid
 
-		if check(matrix, T):
+		if check():
 			result = min(result, mid)
-			Q = mid - 1
+			high = mid - 1
 		else:
-			P = mid + 1
+			low = mid + 1
 
-	return result if result != 10 ** 12 + 1 else -1
+	return result if result != INF else -1
 
 if __name__ == "__main__":
 	T, K = map(int, input().split())
-	matrix = [[0] * 4 for _ in range(4)]
-	unknown = (-1, -1)
+
+	board = [[0] * 4 for _ in range(4)]
+	unknown = None
 
 	for row in range(4):
 		data = [*map(int, input().split())]
@@ -74,6 +64,6 @@ if __name__ == "__main__":
 				unknown = (row, col)
 				continue
 
-			matrix[row][col] = data[col]
+			board[row][col] = data[col]
 
-	print(solve(T - 1, K, matrix, unknown))
+	print(solve(T - 1, K, board, unknown))
