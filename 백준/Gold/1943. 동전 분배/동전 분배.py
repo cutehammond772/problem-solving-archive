@@ -1,6 +1,6 @@
 import sys
 input = lambda: sys.stdin.readline().rstrip()
-INF = 10000000000001
+INF = 100001
 
 def solve(N, money, total):
 	# 돈의 총합이 홀수이면 정확히 반으로 나누는 것은 불가능하다.
@@ -16,12 +16,12 @@ def solve(N, money, total):
 	for x in range(1, N + 1):
 		cost, amount = money[x]
 
-		for m in range(L + 1):
+		for m in range(cost, L + 1):
 			if memo[m] < INF:
 				memo[m] = 0
 				continue
 
-			if m >= cost and memo[m - cost] + 1 <= amount:
+			if memo[m - cost] + 1 <= amount:
 				memo[m] = memo[m - cost] + 1
 
 	return 1 if memo[L] < INF else 0
@@ -29,8 +29,8 @@ def solve(N, money, total):
 if __name__ == "__main__":
 	for _ in range(3):
 		N = int(input())
-
 		money, total = [None], 0
+
 		for _ in range(N):
 			cost, amount = map(int, input().split())
 
