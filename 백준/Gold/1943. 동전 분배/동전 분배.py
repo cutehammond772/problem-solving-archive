@@ -8,23 +8,23 @@ def solve(N, money, total):
 		return 0
 
 	L = total // 2
-	memo = [[INF] * (L + 1) for _ in range(N + 1)]
+	memo = [INF] * (L + 1)
 
 	# 0원은 항상 만들 수 있다.
-	memo[0][0] = 0
+	memo[0] = 0
 
 	for x in range(1, N + 1):
 		cost, amount = money[x]
 
 		for m in range(L + 1):
-			if memo[x - 1][m] < INF:
-				memo[x][m] = 0
+			if memo[m] < INF:
+				memo[m] = 0
 				continue
 
-			if m >= cost and memo[x][m - cost] + 1 <= amount:
-				memo[x][m] = memo[x][m - cost] + 1
+			if m >= cost and memo[m - cost] + 1 <= amount:
+				memo[m] = memo[m - cost] + 1
 
-	return 1 if memo[N][L] < INF else 0
+	return 1 if memo[L] < INF else 0
 
 if __name__ == "__main__":
 	for _ in range(3):
