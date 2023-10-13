@@ -1,20 +1,26 @@
 import sys
 input = lambda: sys.stdin.readline().rstrip()
 
-def check(S, T):
-  result = False
+def solve(S, T):
+  candidates = [T]
 
-  if len(S) >= len(T):
-    return S == T
+  while candidates:
+    candidate = candidates.pop()
 
-  if T[0] == 'B':
-    result = result or check(S, T[1:][::-1])
+    if len(candidate) <= len(S):
+      if candidate == S:
+        return 1
 
-  if T[-1] == 'A':
-    result = result or check(S, T[:-1])
+      continue
 
-  return result
+    if candidate[-1] == 'A':
+      candidates.append(candidate[:-1])
 
-if __name__ == '__main__':
+    if candidate[0] == 'B':
+      candidates.append(candidate[1:][::-1])
+
+  return 0
+
+if __name__ == "__main__":
   S, T = input(), input()
-  print(1 if check(S, T) else 0)
+  print(solve(S, T))
