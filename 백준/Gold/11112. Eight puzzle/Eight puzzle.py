@@ -1,12 +1,18 @@
-import sys
+import sys, time
 from collections import deque
 input = lambda: sys.stdin.readline().rstrip()
 
-INF = 10 ** 10
-target = 2271560481
-mask = (1 << 36) - 1
-
+target = 87654321
 dr, dc = [0, 1, 0, -1], [1, 0, -1, 0]
+
+# 더 빠른 수행을 위한 전처리
+tens = [10 ** x for x in range(10)]
+pp = [[[0] * 9 for _ in range(9)] for _ in range(9)]
+
+for a in range(9):
+  for x in range(9):
+    for y in range(9):
+      pp[a][x][y] = a * (tens[x] - tens[y])
 
 def possible():
   memo = {}
@@ -19,9 +25,6 @@ def possible():
     status, current, count = queue.popleft()
     row, col = current // 3, current % 3
 
-    if memo[status] < count:
-      continue
-
     for x in range(4):
       nrow, ncol = row + dr[x], col + dc[x]
       next = nrow * 3 + ncol
@@ -31,10 +34,10 @@ def possible():
         continue
 
       # 다음 위치 구하기
-      next_num = (status & (15 << (4 * next))) >> (4 * next)
-      next_status = (status | (next_num << (4 * current))) & (mask ^ (15 << (4 * next)))
+      next_num = (status // tens[next]) % 10
+      next_status = status + pp[next_num][current][next]
 
-      if next_status in memo and memo[next_status] <= count + 1:
+      if next_status in memo:
         continue
 
       memo[next_status] = count + 1
@@ -44,17 +47,12 @@ def possible():
 
 # 시작 지점을 고유 값으로 변환
 def get_data():
-  data = [0] * 9
+  data = ''
 
-  for off in range(0, 9, 3):
-    data[off:off + 3] = [int(x) for x in input().replace('#', '0')]
+  for _ in range(3):
+    data += input().replace('#', '0')
 
-  pos = 0
-
-  for i in range(9):
-    pos |= data[i] << (4 * i)
-
-  return pos
+  return int(data[::-1])
 
 if __name__ == "__main__":
   T = int(input())
@@ -67,5 +65,7 @@ if __name__ == "__main__":
     # 시작 지점 가져오기
     pos = get_data()
 
-    if pos in memo: print(memo[pos])
-    else: print("impossible")
+    if pos in memo:
+      print(memo[pos])
+    else:
+      print("impossible")
