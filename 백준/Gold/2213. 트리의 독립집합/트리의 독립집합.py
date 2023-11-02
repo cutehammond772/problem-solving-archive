@@ -41,7 +41,6 @@ def solve(N, P, T):
 		memo[node][status] = result
 		return result
 
-	# 루트 노드를 1로 하며, 우수 마을로 선택된 경우 / 선택되지 않은 경우를 따진다.
 	selected = traverse(0, 1, SELECTED)
 	unselected = traverse(0, 1, UNSELECTED)
 
