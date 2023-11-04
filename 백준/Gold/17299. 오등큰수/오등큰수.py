@@ -2,7 +2,10 @@ import sys
 input = lambda: sys.stdin.readline().rstrip()
 
 # (Decreasing) Monotone Stack
-def solve(N, A):
+if __name__ == "__main__":
+  N = int(input())
+  A = [*map(int, input().split())]
+
   count = [0] * 1000001
 
   # 등장 횟수 전처리
@@ -10,27 +13,16 @@ def solve(N, A):
     count[num] += 1
 
   NGF = [-1] * N
-  stack = [(A[0], 0)]
+  stack = []
 
-  for i in range(1, N):
-    curr_num, curr_idx = A[i], i
-
+  for i in range(N):
     while stack:
-      prev_num, prev_idx = stack[-1]
-
-      if count[prev_num] >= count[curr_num]:
+      if count[A[stack[-1]]] >= count[A[i]]:
         break
 
-      NGF[prev_idx] = curr_num
+      NGF[stack[-1]] = A[i]
       stack.pop()
 
-    stack.append((curr_num, curr_idx))
+    stack.append(i)
 
-  return NGF
-
-if __name__ == "__main__":
-  N = int(input())
-  A = [*map(int, input().split())]
-
-  NGF = solve(N, A)
   print(*NGF)
