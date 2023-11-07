@@ -1,6 +1,6 @@
 import sys
 input = lambda: sys.stdin.readline().rstrip()
-INF = 10 ** 18
+INF = 10 ** 12
 
 # K >= 1 + ... + N으로부터 N의 최대를 구한다.
 def find(K):
