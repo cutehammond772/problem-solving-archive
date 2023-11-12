@@ -9,8 +9,7 @@ if __name__ == '__main__':
     x, y = map(int, input().split())
     order.append((x, y))
 
-  order.sort()
-  seq = [o[1] for o in order]
+  seq = [o[1] for o in sorted(order)]
 
   # seq의 LIS의 길이가 곧 전깃줄의 최대 매칭이다.
   L = len(seq)
