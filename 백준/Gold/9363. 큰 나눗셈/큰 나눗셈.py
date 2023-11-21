@@ -1,5 +1,7 @@
 import sys
+from collections import defaultdict
 input = lambda: sys.stdin.readline().rstrip()
+MAX = int(1e6)
 
 def primes(N):
 	check = [True] * (N + 1)
@@ -18,7 +20,7 @@ def primes(N):
 
 if __name__ == '__main__':
 	T = int(input())
-	check, nums = primes(int(1e6))
+	check, nums = primes(MAX)
 
 	for i in range(1, T + 1):
 		N, M = map(int, input().split())
@@ -27,11 +29,10 @@ if __name__ == '__main__':
 		B = [*map(int, input().split())]
 
 		# +: 분자, -: 분모
-		memo = [0] * (int(1e6) + 1)
+		memo = defaultdict(int)
 
 		for num in A:
-			current = num
-			end = int(num ** 0.5)
+			current, end = num, int(num ** 0.5)
 
 			for x in range(len(nums)):
 				if current == 1:
@@ -46,8 +47,7 @@ if __name__ == '__main__':
 					current //= nums[x]
 
 		for num in B:
-			current = num
-			end = int(num ** 0.5)
+			current, end = num, int(num ** 0.5)
 
 			for x in range(len(nums)):
 				if current == 1:
@@ -63,7 +63,7 @@ if __name__ == '__main__':
 
 		a, b = 1, 1
 
-		for x in range(2, int(1e6) + 1):
+		for x in memo:
 			if memo[x] > 0:
 				a *= x ** memo[x]
 
