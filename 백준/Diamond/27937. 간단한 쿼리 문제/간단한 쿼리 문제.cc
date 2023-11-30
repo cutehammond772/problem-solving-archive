@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("O3")
 #pragma GCC optimize("Ofast")
 #pragma GCC optimize("unroll-loops")
 #define FAST_IO ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr)
@@ -26,7 +25,7 @@ struct query {
 struct FenwickTree {
     ll tree[200001], counts[200001];
 
-    void update(ll i, ll x) {
+    inline void update(ll i, ll x) {
         while (i <= 200000) {
             tree[i] += x;
             counts[i] += (x > 0 ? 1 : -1);
@@ -35,14 +34,14 @@ struct FenwickTree {
         }
     }
 
-    pair<ll, ll> query(ll i) {
+    inline pair<ll, ll> query(ll i) {
         ll result = 0, count = 0;
 
         while (i > 0) {
             result += tree[i];
             count += counts[i];
 
-            i -= i & -i;
+            i &= (i - 1);
         }
 
         return { result, count };
@@ -66,10 +65,8 @@ void init() {
 inline void add(ll x) {
     auto [sum_total, total_count] = fenwick.query(200000);
     auto [sum_left, left_count] = fenwick.query(x);
-
-    current += (sum_total - sum_left) - x * (total_count - left_count); // x 초과
-    current += (x * left_count) - sum_left; // x 이하
-
+    
+    current += sum_total - x * total_count - (sum_left << 1) + ((x * left_count) << 1);
     fenwick.update(x, x);
 }
 
@@ -79,8 +76,7 @@ inline void remove(ll x) {
     auto [sum_total, total_count] = fenwick.query(200000);
     auto [sum_left, left_count] = fenwick.query(x);
 
-    current -= (sum_total - sum_left) - x * (total_count - left_count); // x 초과
-    current -= (x * left_count) - sum_left; // x 이하
+    current -= sum_total - x * total_count - (sum_left << 1) + ((x * left_count) << 1);
 }
 
 int main() {
