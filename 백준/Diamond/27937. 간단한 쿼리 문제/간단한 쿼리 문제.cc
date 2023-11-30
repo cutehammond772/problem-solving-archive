@@ -50,7 +50,7 @@ struct FenwickTree {
 } fenwick;
 
 vector<query> queries;
-ll arr[200001], result[100000];
+ll arr[200001], result[200000];
 
 ll current = 0;
 
@@ -65,7 +65,7 @@ void init() {
 inline void add(ll x) {
     auto [sum_total, total_count] = fenwick.query(200000);
     auto [sum_left, left_count] = fenwick.query(x);
-    
+
     current += sum_total - x * total_count - (sum_left << 1) + ((x * left_count) << 1);
     fenwick.update(x, x);
 }
