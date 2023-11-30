@@ -1,4 +1,7 @@
 #include <bits/stdc++.h>
+#pragma GCC optimize("O3")
+#pragma GCC optimize("Ofast")
+#pragma GCC optimize("unroll-loops")
 #define FAST_IO ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr)
 
 using namespace std;
@@ -55,6 +58,7 @@ ll current = 0;
 void init() {
     memset(arr, 0, sizeof arr);
     memset(result, 0, sizeof result);
+
     memset(fenwick.tree, 0, sizeof fenwick.tree);
     memset(fenwick.counts, 0, sizeof fenwick.counts);
 }
