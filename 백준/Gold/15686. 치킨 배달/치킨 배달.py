@@ -1,59 +1,67 @@
 import sys
 input = lambda: sys.stdin.readline().rstrip()
 
-# N은 13 이하이다.
-def combination(N, R):
-  result = []
-  for comb in range(2 ** N):
-    accumulation = set()
-    for idx in range(N):
-      if (1 << idx) & comb > 0:
-        accumulation.add(idx)
-        
-      if len(accumulation) == R:
-        result.append(accumulation)
-        break
+CHICKEN, RESIDENT = 2, 1
 
-  return result        
+def analyse(N, matrix):
+  chickens, residents = [], []
 
-def solve(matrix, N, M, houses, chickens):
-  result = 2 ** 63 - 1
-  
-  # 치킨 거리를 먼저 구한다.
-  dist = [[0] * len(chickens) for _ in range(len(houses))]
+  for row in range(N):
+    for col in range(N):
+      if matrix[row][col] == CHICKEN:
+        chickens.append((row, col))
 
-  for house_idx in range(len(houses)):
-    for chicken_idx in range(len(chickens)):
-      house = houses[house_idx]
-      chicken = chickens[chicken_idx]
-      dist[house_idx][chicken_idx] = abs(house // N - chicken //
-                                         N) + abs(house % N - chicken % N)
+      if matrix[row][col] == RESIDENT:
+        residents.append((row, col))
 
-  for r in range(M, 0, -1):
-    for ch in combination(len(chickens), M):
-      accumulation = 0
-      for i in range(len(houses)):
-        if accumulation > result:
-          break
-          
-        accumulation += min([dist[i][j] for j in range(len(chickens)) if j in ch])
-        
-      result = min(result, accumulation)
+  return chickens, residents
+
+def dist2(P, Q):
+  return abs(P[0] - Q[0]) + abs(P[1] - Q[1])
+
+def count(x):
+  result = 0
+
+  while x:
+    result += x & 1
+
+    x >>= 1
 
   return result
 
+def solve(N, M, matrix):
+  chickens, residents = analyse(N, matrix)
+  C, R = len(chickens), len(residents)
 
-if __name__ == '__main__':
+  memo = [[dist2(chickens[x], residents[y]) for y in range(R)] for x in range(C)]
+  result = 10 ** 10
+
+  for bit in range(1, 1 << C):
+    if count(bit) > M:
+      continue
+
+    total = 0
+
+    for y in range(R):
+      dist = 101
+
+      for x in range(C):
+        if not (bit & (1 << x)):
+          continue
+
+        dist = min(dist, memo[x][y])
+
+      total += dist
+
+    result = min(result, total)
+
+  return result
+
+if __name__ == "__main__":
   N, M = map(int, input().split())
-  matrix = [list(map(int, input().split())) for _ in range(N)]
-  houses, chickens = [], []
-  
-  # 집과 치킨집의 위치를 알아낸다.
-  for row in range(N):
-    for col in range(N):
-      if matrix[row][col] == 1:
-        houses.append(row * N + col)
-      if matrix[row][col] == 2:
-        chickens.append(row * N + col)
+  matrix = []
 
-  print(solve(matrix, N, M, houses, chickens))
+  for _ in range(N):
+    matrix.append([*map(int, input().split())])
+
+  print(solve(N, M, matrix))
