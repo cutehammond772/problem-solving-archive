@@ -1,47 +1,24 @@
-def make_arr():
-  arr = [0] * 100
+import sys
+input = lambda: sys.stdin.readline().rstrip()
 
-  # 1의 자리의 경우 모두 1이다.
-  arr[:10] = [1] * 10
-  
-  for x in range(1, 10):
-    for y in range(10):
-      if y < x:
-        continue
-          
-      off = (x - 1) * 10
-      arr[y + x * 10] = sum(arr[off:(off + y)])
-  
-  arr[0] = 0
-  return arr
+def solve(N):
+  if N >= 1023:
+    return -1
 
-def create(N, l):
-  if l == 1:
-    return [N]
-    
-  lst = []
-  t = N * (10 ** (l - 1))
-  
-  for i in range(l - 2, N):
-    lst += [t + x for x in create(i, l - 1)]
-    
-  return lst
+  nums = []
 
-def solve(N, arr):
-  prev = arr[0]
-  for i in range(100):
-    if prev < N <= prev + arr[i]:
-      return create(i % 10, i // 10 + 1)[N - prev - 1]
-      
-    prev += arr[i]
-    
-  return -1
+  for bit in range(1, 1 << 10):
+    num = 0
 
-if __name__ == "__main__":
+    for i in range(9, -1, -1):
+      if bit & 1 << i:
+        num = (num * 10) + i
+
+    nums.append(num)
+
+  nums.sort()
+  return nums[N]
+
+if __name__ == '__main__':
   N = int(input())
-  
-  if N == 0:
-    print(0)
-  else:
-    print(solve(N, make_arr()))
-  
+  print(solve(N))
