@@ -5,17 +5,15 @@ def solve(N, A):
 	memo = [0] * (N + 1)
 	
 	for start in range(N):
-		memo[start] = max(memo[start], memo[start - 1])
-		
 		T, P = A[start]
 		end = start + T
 		
-		if end > N:
-			continue
+		memo[start] = max(memo[start], memo[start - 1])
 		
-		memo[end] = max(memo[end], memo[start] + P)
+		if end <= N:
+			memo[end] = max(memo[end], memo[start] + P)
 	
-	return max(memo)
+	return max(memo[N - 1], memo[N])
 
 if __name__ == '__main__':
 	N = int(input())
