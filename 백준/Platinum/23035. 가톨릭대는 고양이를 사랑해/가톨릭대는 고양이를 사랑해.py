@@ -1,6 +1,7 @@
 import sys
 input = lambda: sys.stdin.readline().rstrip()
 
+# upper bound
 def find(S, t):
 	x, y = 0, len(S) - 1
 	
@@ -14,6 +15,8 @@ def find(S, t):
 			
 	return x
 
+# column 번호를 기준으로 LIS를 구하되, 일직선으로 이동 시 같은 번호가 나열되므로
+# upper bound를 사용해야 한다.
 def solve(A):
 	A = [t[1] for t in sorted(A)]
 	S = []
