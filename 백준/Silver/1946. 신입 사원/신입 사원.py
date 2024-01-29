@@ -1,17 +1,20 @@
 import sys
 input = lambda: sys.stdin.readline().rstrip()
 
-def solve(A):
+def solve(N, A):
+	count = 0
+	rank = N
+	
 	A.sort()
-	stack = []
 	
 	for p, q in A:
-		while stack and stack[-1] < q:
-			stack.pop()
+		if rank < q:
+			continue
 		
-		stack.append(q)
+		count += 1
+		rank = q
 	
-	return len(stack)
+	return count
 
 if __name__ == "__main__":
 	T = int(input())
@@ -22,7 +25,7 @@ if __name__ == "__main__":
 		
 		for _ in range(N):
 			P, Q = map(int, input().split())
-			A.append((N - P, N - Q))
+			A.append((P, Q))
 			
-		print(solve(A))
+		print(solve(N, A))
 			
