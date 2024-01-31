@@ -2,23 +2,39 @@ import sys
 from collections import deque
 input = lambda: sys.stdin.readline().rstrip()
 
-# 오름차순으로 정렬된 [1, 2, ..., N] 배열에서
-# [N-5, N-3, N-1, N, N-2, N-4, N-6, ...]와 같이 배치할 때 최대가 된다.
-def solve(N, A):
+def create(nums):
 	result = deque([])
-	A.sort(reverse=True)
 	
-	for i in range(N):
-		if i % 2:
-			result.appendleft(A[i])
+	for num in nums:
+		if len(result) % 2:
+			result.appendleft(num)
 		else:
-			result.append(A[i])
+			result.append(num)
 	
 	return result
+
+def solve(A):
+	P, N = [], []
+	
+	for num in A:
+		(P if num >= 0 else N).append(num)
+	
+	P.sort(reverse=True)
+	N.sort()
+	
+	positives, negatives = create(P), create(N)
+	
+	if len(positives) % 2 == 0:
+		positives.reverse()
+	
+	if len(negatives) % 2 == 1:
+		negatives.reverse()
+	
+	return positives + negatives
 
 if __name__ == "__main__":
 	N = int(input())
 	A = [*map(int, input().split())]
 	
-	print(*solve(N, A))
+	print(*solve(A))
 	
