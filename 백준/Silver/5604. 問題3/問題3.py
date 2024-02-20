@@ -2,12 +2,11 @@ import sys
 input = lambda: sys.stdin.readline().rstrip()
 
 def solve(N):
-	result = []
 	sequence = []
 	
 	def traverse(X):
 		if X == 0:
-			result.append(sequence[:])
+			print(*sequence)
 			return
 		
 		L = X if not sequence else sequence[-1]
@@ -18,12 +17,8 @@ def solve(N):
 			sequence.pop()
 		
 	traverse(N)
-	return result
 
 if __name__ == "__main__":
 	N = int(input())
-	result = solve(N)
-	
-	for sequence in result:
-		print(*sequence)
+	solve(N)
 	
