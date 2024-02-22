@@ -1,5 +1,5 @@
 WITH 
-    TECHS AS (
+    SKILLS AS (
         SELECT a.ID, b.NAME, b.CATEGORY
         FROM 
             DEVELOPERS a INNER JOIN SKILLCODES b
@@ -7,12 +7,12 @@ WITH
     ),
     FRONTEND_DEV AS (
         SELECT DISTINCT ID
-        FROM TECHS
+        FROM SKILLS
         WHERE CATEGORY = "Front End"
     ),
     PYTHON_DEV AS (
         SELECT DISTINCT ID
-        FROM TECHS
+        FROM SKILLS
         WHERE NAME = "Python"
     ),
     GRADE_A AS (
@@ -22,13 +22,19 @@ WITH
     ),
     GRADE_B AS (
         SELECT DISTINCT ID
-        FROM TECHS
-        WHERE NAME = "C#" AND ID NOT IN (SELECT * FROM GRADE_A)
+        FROM SKILLS
+        WHERE 
+            NAME = "C#" 
+            AND ID NOT IN (SELECT * FROM GRADE_A)
     ),
     GRADE_C AS (
         SELECT ID
         FROM FRONTEND_DEV
-        WHERE ID NOT IN (SELECT ID FROM GRADE_A UNION SELECT ID FROM GRADE_B)
+        WHERE ID NOT IN (
+            SELECT ID FROM GRADE_A 
+            UNION
+            SELECT ID FROM GRADE_B
+        )
     ),
     ABC_DEVELOPERS AS (
         SELECT "A" AS GRADE, a.ID
