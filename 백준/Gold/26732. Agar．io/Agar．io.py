@@ -1,5 +1,4 @@
 import sys
-from heapq import heappush, heappop
 input = lambda: sys.stdin.readline().rstrip()
 
 def solve(N, T):
@@ -13,11 +12,11 @@ def solve(N, T):
 	T.sort()
 
 	# 먹을 수 있는 세포들
-	heap = []
+	edible = []
 
 	while i < N:
 		while i < N and cell > T[i]:
-			heappush(heap, -T[i])
+			edible.append(T[i])
 			i += 1
 
 		# 세포가 가장 큰 세포가 된 경우 (같은 경우 포함)
@@ -25,10 +24,10 @@ def solve(N, T):
 			return time
 
 		# 위의 경우를 제외하면, 더이상 먹을 수 없을 때 가장 큰 세포에 도달할 수 없다.
-		if not heap:
+		if not edible:
 			return "NIE"
 
-		cell += -heappop(heap)
+		cell += edible.pop()
 		time += 1
 
 	# 모든 세포를 먹을 수 있으면 가장 큰 세포이다.
