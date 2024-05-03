@@ -1,24 +1,28 @@
 import sys
 input = lambda: sys.stdin.readline().rstrip()
 
-if __name__ == '__main__':
-	N, K = map(int, input().split())
+def solve(N, K, S, H):
+  memo = [-1] * 101
+  
+  # 처음 시작 때는 체력 100에 0점이다.
+  memo[100] = 0
+  
+  for i in range(N):
+    # 구간에 진입하기 전 체력 회복
+    for x in range(100, -1, -1):
+      memo[min(100, x + K)] = max(memo[min(100, x + K)], memo[x])
+    
+    # 구간을 플레이하는 경우
+    for x in range(H[i], 101):
+      memo[x - H[i]] = max(memo[x - H[i]], memo[x] + S[i])
+  
+  return max(memo)
 
-	S = [0, *map(int, input().split())]
-	H = [0, *map(int, input().split())]
-
-	# memo[phase][체력] = 점수
-	memo = [[0] * 101 for _ in range(N + 1)]
-
-	for x in range(1, N + 1):
-		s, h = S[x], H[x]
-
-		# 체력 회복
-		for y in range(101):
-			memo[x][min(100, y + K)] = max(memo[x - 1][y], memo[x][min(100, y + K)])
-
-		# 춤추기
-		for y in range(h, 101):
-			memo[x][y - h] = max(memo[x][y - h], memo[x][y] + s)
-
-	print(max(memo[-1]))
+if __name__ == "__main__":
+  N, K = map(int, input().split())
+  
+  S = [*map(int, input().split())]
+  H = [*map(int, input().split())]
+  
+  print(solve(N, K, S, H))
+  
