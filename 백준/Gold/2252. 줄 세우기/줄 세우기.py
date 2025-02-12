@@ -1,42 +1,41 @@
 import sys
-from queue import deque
+from collections import deque
 input = lambda: sys.stdin.readline().rstrip()
 
-def solve(N, in_degrees, adjacents):
-  result = []
-  
-  que = deque()
-  visited = [False] * N
 
-  for x in [x for x in range(N) if in_degrees[x] == 0]:
-    que.append(x)
-    visited[x] = True
-  
-  while que:
-    x = que.popleft()
-    result.append(x + 1)
-    
-    for t in adjacents[x]:
-      if visited[t]:
-        continue
-        
-      in_degrees[t] -= 1
-      
-      if in_degrees[t] == 0:
-        que.append(t)
-        visited[t] = True
-        
-  return result
+def solve(N, C, G):
+    nodes, result = [], []
+
+    # 1. Extract Root Nodes
+    for i in range(1, N + 1):
+        if C[i] == 0:
+            nodes.append(i)
+
+    # 2. Topological Sorting
+    queue = deque(nodes)
+
+    while queue:
+        node = queue.popleft()
+        result.append(node)
+
+        for next in G[node]:
+            C[next] -= 1
+
+            if C[next] == 0:
+                queue.append(next)
+
+    return result
+
 
 if __name__ == '__main__':
-  N, M = map(int, input().split())
-  in_degrees = [0] * N
-  adjacents = [[] for _ in range(N)]
-  
-  for _ in range(M):
-    P, Q = map(int, input().split())
-    adjacents[P - 1].append(Q - 1)
-    in_degrees[Q - 1] += 1
-    
-  result = solve(N, in_degrees, adjacents)
-  print(*result)
+    N, M = map(int, input().split())
+    G = [[] for _ in range(N + 1)]
+    C = [0] * (N + 1)
+
+    for _ in range(M):
+        A, B = map(int, input().split())
+        G[A].append(B)
+        C[B] += 1
+
+    result = solve(N, C, G)
+    print(*result)
